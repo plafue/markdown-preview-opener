@@ -9,7 +9,7 @@ module.exports = MarkdownPreviewOpener =
         type: 'string'
     closePreviewWhenClosingEditor:
       type: 'boolean'
-      default: true
+      default: false
 
   activate: (state) ->
     process.nextTick =>
