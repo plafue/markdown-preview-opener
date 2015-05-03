@@ -5,3 +5,9 @@ Opens the [markdown preview](https://atom.io/packages/markdown-preview) pane aut
 It can also close the preview pane for you, when you close the corresponding editor.
 
 I'm lazy.
+
+### Installation
+
+```
+apm install markdown-preview-opener
+```
