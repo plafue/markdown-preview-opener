@@ -1,6 +1,6 @@
 {CompositeDisposable} = require 'atom'
 
-module.exports = MarkdownPreviewOpener =
+module.exports = MarkdownPreviewPlusOpener =
   config:
     suffixes:
       type: 'array'
@@ -13,21 +13,21 @@ module.exports = MarkdownPreviewOpener =
 
   activate: (state) ->
     process.nextTick =>
-      if not (atom.packages.getLoadedPackage 'markdown-preview')
-        console.log 'markdown-preview-opener-view: markdown-preview package not found'
+      if not (atom.packages.getLoadedPackage 'markdown-preview-plus')
+        console.log 'markdown-preview-plus-opener-view: markdown-preview-plus package not found'
         return
 
     atom.workspace.onDidOpen(@subscribePane)
 
   subscribePane: (event) ->
     suffix = event?.uri?.match(/(\w*)$/)[1]
-    if suffix in atom.config.get('markdown-preview-opener.suffixes')
-      previewUrl = "markdown-preview://editor/#{event.item.id}"
+    if suffix in atom.config.get('markdown-preview-plus-opener.suffixes')
+      previewUrl = "markdown-preview-plus://editor/#{event.item.id}"
       previewPane = atom.workspace.paneForURI(previewUrl)
       workspaceView = atom.views.getView(atom.workspace)
       if not previewPane
-        atom.commands.dispatch workspaceView, 'markdown-preview:toggle'
-        if atom.config.get('markdown-preview-opener.closePreviewWhenClosingEditor')
+        atom.commands.dispatch workspaceView, 'markdown-preview-plus:toggle'
+        if atom.config.get('markdown-preview-plus-opener.closePreviewWhenClosingEditor')
           event.item.onDidDestroy ->
             for pane in atom.workspace.getPanes()
               for item in pane.items when item.getURI() is previewUrl

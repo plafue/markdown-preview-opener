@@ -1,3 +1,7 @@
+## 0.2.0 - markdown-preview-plus
+* Forked from markdown-preview-opener
+* I just wanted to open markdown-preview-plus.
+
 ## 0.1.1
 * Fixed closing single item instead of whole pane
 

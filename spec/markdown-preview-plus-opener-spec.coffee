@@ -1,12 +1,12 @@
-describe "MarkdownPreviewOpener", ->
-  [workspaceElement, markdownPreviewactivAtionPromise, activationPromise] = []
+describe "MarkdownPreviewPlusOpener", ->
+  [workspaceElement, markdownPreviewPlusactivAtionPromise, activationPromise] = []
 
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
-    markdownPreviewactivAtionPromise = atom.packages.activatePackage('markdown-preview')
-    activationPromise = atom.packages.activatePackage('markdown-preview-opener')
+    markdownPreviewPlusactivAtionPromise = atom.packages.activatePackage('markdown-preview-plus')
+    activationPromise = atom.packages.activatePackage('markdown-preview-plus-opener')
 
-  describe "when a markdown file is opened a 'markdown-preview:toggle' event ", ->
+  describe "when a markdown file is opened a 'markdown-preview-plus:toggle' event ", ->
     it "is triggered if the file has the right extension", ->
       waitsForPromise ->
         expectedLength = atom.workspace.getPanes().length + 1
