@@ -1,7 +1,7 @@
 {
   "name": "markdown-preview-plus-opener",
   "main": "./lib/markdown-preview-plus-opener",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Opens the markdown-preview-plus pane automatically when a markdown file is opened. Forked from plafue's markdown-preview-opener. They really did all the work.",
   "repository": "https://github.com/nick-f/markdown-preview-plus-opener",
   "license": "MIT",
