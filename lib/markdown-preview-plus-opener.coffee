@@ -5,7 +5,7 @@ previewMarkdown = (editor, openIfClosed) ->
     return
 
   suffix = editor.getBuffer().getUri().match(/(\w*)$/)[1]
-  if not suffix in atom.config.get('markdown-preview-plus-opener.suffixes')
+  if not (suffix in atom.config.get('markdown-preview-plus-opener.suffixes'))
     return
 
   previewUri = "markdown-preview-plus://editor/#{editor.id}"
