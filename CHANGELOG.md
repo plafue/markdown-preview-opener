@@ -1,6 +1,6 @@
-## 0.2.0 - markdown-preview-plus
-* Forked from markdown-preview-opener
-* I just wanted to open markdown-preview-plus.
+## 0.1.2
+* Added support for markdown-preview-plus (credits to Nick Freeland)
+* Activate preview pane when corresponding editor is activated (toggleable via settings)
 
 ## 0.1.1
 * Fixed closing single item instead of whole pane
