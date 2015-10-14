@@ -1,4 +1,5 @@
 {CompositeDisposable} = require 'atom'
+{TextEditor} = require 'atom'
 
 module.exports = MarkdownPreviewOpener =
 
@@ -25,36 +26,30 @@ module.exports = MarkdownPreviewOpener =
       @previewName = previewPackage.name
 
       atom.workspace.onDidOpen (event) =>
-        @previewMarkdown(event.item, true)
+        @checkMarkdown(event.item, true)
 
       if atom.config.get('markdown-preview-opener.activatePreviewOnActivatingEditor')
         atom.workspace.onDidChangeActivePaneItem (item) =>
-          @previewMarkdown(item, false)
+          @checkMarkdown(item, false)
 
-  previewMarkdown: (editor, openIfClosed) ->
+  checkMarkdown: (editor, openIfClosed) ->
     process.nextTick =>
-      if not (editor is atom.workspace.getActiveTextEditor())
-        return
+      if editor? and (editor instanceof TextEditor)
+        suffix = editor?.getBuffer()?.getUri()?.match(/(\w*)$/)[1]
+        if suffix in atom.config.get('markdown-preview-opener.suffixes')
+          previewUri = "#{@previewName}://editor/#{editor.id}"
+          previewPane = atom.workspace.paneForURI(previewUri)
+          if previewPane?
+            previewPane.activateItemForURI(previewUri)
+          else if openIfClosed
+            @openMarkdownPreview(editor)
 
-      suffix = editor?.getBuffer()?.getUri()?.match(/(\w*)$/)[1]
-      if not (suffix in atom.config.get('markdown-preview-opener.suffixes'))
-        return
-
-      previewUri = "#{@previewName}://editor/#{editor.id}"
-      previewPane = atom.workspace.paneForURI(previewUri)
-      if previewPane?
-        previewPane.activateItemForURI(previewUri)
-        return
-
-      if not openIfClosed
-        return
-
-      workspaceView = atom.views.getView(atom.workspace)
-      command = "#{@previewName}:toggle"
-      atom.commands.dispatch workspaceView, command
-      if atom.config.get('markdown-preview-opener.closePreviewWhenClosingEditor')
-        editor.onDidDestroy ->
-          for pane in atom.workspace.getPanes()
-            for item in pane.items when item.getURI() is previewUri
-              pane.destroyItem(item)
-              break
+  openMarkdownPreview: (editor) ->
+    workspaceView = atom.views.getView(atom.workspace)
+    atom.commands.dispatch workspaceView, "#{@previewName}:toggle"
+    if atom.config.get('markdown-preview-opener.closePreviewWhenClosingEditor')
+      editor.onDidDestroy ->
+        for pane in atom.workspace.getPanes()
+          for item in pane.items when item.getURI() is previewUri
+            pane.destroyItem(item)
+            break
