@@ -1,7 +1,4 @@
-{CompositeDisposable} = require 'atom'
-{TextEditor} = require 'atom'
-
-module.exports = MarkdownPreviewOpener =
+class MarkdownPreviewOpener
 
   config:
     suffixes:
@@ -25,31 +22,41 @@ module.exports = MarkdownPreviewOpener =
 
       @previewName = previewPackage.name
 
-      atom.workspace.onDidOpen (event) =>
+      {CompositeDisposable} = require 'atom'
+      @subs                 = new CompositeDisposable
+
+      @subs.add atom.workspace.onDidOpen (event) =>
         @checkMarkdown(event.item, true)
 
       if atom.config.get('markdown-preview-opener.activatePreviewOnActivatingEditor')
-        atom.workspace.onDidChangeActivePaneItem (item) =>
+        @subs.add atom.workspace.onDidChangeActivePaneItem (item) =>
           @checkMarkdown(item, false)
+
+  deactivate: ->
+    @subs.dispose()
 
   checkMarkdown: (editor, openIfClosed) ->
     process.nextTick =>
+      {TextEditor} = require 'atom'
       if editor? and (editor instanceof TextEditor)
-        suffix = editor?.getBuffer()?.getUri()?.match(/(\w*)$/)[1]
+        suffix = editor.getBuffer()?.getUri()?.match(/(\w*)$/)[1]
         if suffix in atom.config.get('markdown-preview-opener.suffixes')
           previewUri = "#{@previewName}://editor/#{editor.id}"
           previewPane = atom.workspace.paneForURI(previewUri)
           if previewPane?
             previewPane.activateItemForURI(previewUri)
           else if openIfClosed
-            @openMarkdownPreview(editor, previewUri)
+            @openMarkdownPreview(editor)
 
-  openMarkdownPreview: (editor, previewUri) ->
+  openMarkdownPreview: (editor) ->
     workspaceView = atom.views.getView(atom.workspace)
     atom.commands.dispatch workspaceView, "#{@previewName}:toggle"
     if atom.config.get('markdown-preview-opener.closePreviewWhenClosingEditor')
-      editor.onDidDestroy ->
+      @subs.add editor.onDidDestroy =>
+        previewUri = "#{@previewName}://editor/#{editor.id}"
         for pane in atom.workspace.getPanes()
           for item in pane.items when item.getURI() is previewUri
             pane.destroyItem(item)
             break
+
+module.exports = new MarkdownPreviewOpener
