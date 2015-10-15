@@ -1,3 +1,7 @@
+## 0.1.2
+* Added support for markdown-preview-plus (credits to Nick Freeland)
+* Activate preview pane when corresponding editor is activated (toggleable via settings)
+
 ## 0.1.1
 * Fixed closing single item instead of whole pane
 
