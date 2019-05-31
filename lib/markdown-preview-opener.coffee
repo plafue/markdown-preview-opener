@@ -24,7 +24,7 @@ module.exports = MarkdownPreviewOpener =
     if suffix in atom.config.get('markdown-preview-opener.suffixes')
       previewUrl = "markdown-preview://editor/#{event.item.id}"
       previewPane = atom.workspace.paneForURI(previewUrl)
-      workspaceView = atom.views.getView(atom.workspace)
+      workspaceView = event.item.component.element
       if not previewPane
         atom.commands.dispatch workspaceView, 'markdown-preview:toggle'
         if atom.config.get('markdown-preview-opener.closePreviewWhenClosingEditor')
